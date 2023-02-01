@@ -1,0 +1,27 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "winghocheung",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.9.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winghocheung/verbose-journey.git"
+  },
+  "bugs": {
+    "url": "https://github.com/winghocheung/verbose-journey/issues"
+  },
+  "homepage": "https://github.com/winghocheung/verbose-journey#readme",
+  "description": ""
+}
