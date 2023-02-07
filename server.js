@@ -18,11 +18,11 @@ app.get("/", function (req, res) {
 app.get("/api/products", function (req, res) {
   let queryPromise = null;
 
-  if (req.query.category) {
+  if (req.query.q) {
     queryPromise = db.getAllProducts(
       req.query.page,
       req.query.perPage,
-      req.query.category
+      req.query.q
     );
   } else {
     queryPromise = db.getAllProducts(req.query.page, req.query.perPage);
