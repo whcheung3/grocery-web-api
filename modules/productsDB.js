@@ -60,8 +60,8 @@ module.exports = class ProductsDB {
     return newProduct;
   }
 
-  getAllProducts(page, perPage, name) {
-    let findBy = name ? { name } : {};
+  getAllProducts(page, perPage, category) {
+    let findBy = category ? { category } : {};
 
     if (+page && +perPage) {
       return this.Product.find(findBy)
