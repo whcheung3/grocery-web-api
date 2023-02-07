@@ -64,7 +64,9 @@ module.exports = class ProductsDB {
     let findBy = category ? { category } : {};
 
     if (+page && +perPage) {
-      return this.Product.find(findBy)
+      return this.Product.find({
+        category: { $regex: new RegExp(category, "i") },
+      })
         .sort({ "history.valid_to": -1 })
         .skip((page - 1) * +perPage)
         .limit(+perPage)
