@@ -7,7 +7,6 @@ const productSchema = new Schema({
     type: String,
     minLength: 12,
     maxLength: 12,
-    unique: true,
   },
   // product category, can have more than one category
   category: [String],
@@ -76,19 +75,19 @@ module.exports = class ProductsDB {
     );
   }
 
-  getProductByUpc(upc) {
-    return this.Product.findOne({ upc: upc }).exec();
+  getProductById(id) {
+    return this.Product.findOne({ _id: id }).exec();
   }
 
-  updateProductByUpc(data, upc) {
-    // return this.Product.updateOne({ upc: upc }, { $set: data }).exec();
+  updateProductById(data, id) {
+    // return this.Product.updateOne({ _id: id }, { $set: data }).exec();
     return this.Product.updateOne(
-      { upc: upc },
+      { _id: id },
       { $set: { history: { $concatArrays: ["$history", [data]] } } }
     ).exec();
   }
 
-  deleteProductByUpc(upc) {
-    return this.Product.deleteOne({ upc: upc }).exec();
+  deleteProductById(id) {
+    return this.Product.deleteOne({ _id: id }).exec();
   }
 };

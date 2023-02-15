@@ -39,8 +39,8 @@ app.get("/api/products", function (req, res) {
 });
 
 // Get one product
-app.get("/api/products/:upc", function (req, res) {
-  db.getProductByUpc(req.params.upc)
+app.get("/api/products/id", function (req, res) {
+  db.getProductById(req.params.id)
     .then((data) => {
       if (data) res.status(200).json(data);
       else res.json({ message: "Product Not Found" });
@@ -64,10 +64,10 @@ app.post("/api/products", function (req, res) {
 
 // Update new price history of product
 // Expect a JSON object in body, e.g. { "history": [ { store: "No Frills", was_price: 10.99, price: 9.99, valid_to: "2023-02-04" } ]
-app.put("/api/products/:upc", function (req, res) {
-  db.updateProductByUpc(req.body, req.params.upc)
+app.put("/api/products/:id", function (req, res) {
+  db.updateProductById(req.body, req.params.id)
     .then(() => {
-      res.status(200).json({ message: `Product Updated: ${req.params.upc}` });
+      res.status(200).json({ message: `Product Updated: ${req.params.id}` });
     })
     .catch((error) => {
       res.status(500).json({ message: `Unable to Update Product: ${error}` });
@@ -75,10 +75,10 @@ app.put("/api/products/:upc", function (req, res) {
 });
 
 // Delete product
-app.delete("/api/products/:upc", function (req, res) {
-  db.deleteProductByUpc(req.params.upc)
+app.delete("/api/products/:id", function (req, res) {
+  db.deleteProductById(req.params.id)
     .then(() => {
-      res.status(204).json({ message: `Product Deleted: ${req.params.upc}` });
+      res.status(204).json({ message: `Product Deleted: ${req.params.id}` });
     })
     .catch((error) => {
       res.status(500).json({ message: `Unable to Delete Product: ${error}` });
