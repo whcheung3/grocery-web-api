@@ -77,10 +77,7 @@ module.exports = class ProductsDB {
 
   updateProductById(data, id) {
     // return this.Product.updateOne({ _id: id }, { $set: data }).exec();
-    return this.Product.updateOne(
-      { _id: id },
-      { $set: { history: { $concatArrays: ["$history", [data]] } } }
-    ).exec();
+    return this.Product.updateOne({ _id: id }, { $push: { history: [data] } });
   }
 
   deleteProductById(id) {
