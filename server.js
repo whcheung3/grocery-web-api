@@ -39,7 +39,7 @@ app.get("/api/products", function (req, res) {
 });
 
 // Get one product
-app.get("/api/products/id", function (req, res) {
+app.get("/api/products/:id", function (req, res) {
   db.getProductById(req.params.id)
     .then((data) => {
       if (data) res.status(200).json(data);
