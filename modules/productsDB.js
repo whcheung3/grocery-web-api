@@ -3,11 +3,7 @@ const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
   // Universal Product Code, UPC-A barcode contains 12 digits
-  upc: {
-    type: String,
-    minLength: 12,
-    maxLength: 12,
-  },
+  upc: String,
   // product category, can have more than one category
   category: [String],
   // product brand name
