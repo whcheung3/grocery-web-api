@@ -62,8 +62,8 @@ app.post("/api/products", function (req, res) {
     });
 });
 
-// Update new price history of product
-// Expect a JSON object in body, e.g. { "history": [ { store: "No Frills", was_price: 10.99, price: 9.99, valid_to: "2023-02-04" } ]
+// Update product
+// Expect a JSON object in body, e.g. { "brand": "Wonder", "name": "White Bread" }
 app.put("/api/products/:id", function (req, res) {
   db.updateProductById(req.body, req.params.id)
     .then(() => {
@@ -71,6 +71,38 @@ app.put("/api/products/:id", function (req, res) {
     })
     .catch((error) => {
       res.status(500).json({ message: `Unable to Update Product: ${error}` });
+    });
+});
+
+// Add new price history of product
+// Expect a JSON object in body, e.g. { store: "No Frills", price: 9.99, valid_to: "2023-02-04" }
+app.put("/api/products/:id/add", function (req, res) {
+  db.addNewHistoryById(req.body, req.params.id)
+    .then(() => {
+      res
+        .status(200)
+        .json({ message: `New Price History Added: ${req.params.id}` });
+    })
+    .catch((error) => {
+      res
+        .status(500)
+        .json({ message: `Unable to Add New Price History : ${error}` });
+    });
+});
+
+// Delete price history of product
+// Expect a JSON object in body, e.g. { store: "No Frills", price: 9.99, valid_to: "2023-02-04" }
+app.put("/api/products/:id/delete", function (req, res) {
+  db.deleteHistoryById(req.body, req.params.id)
+    .then(() => {
+      res
+        .status(200)
+        .json({ message: `Price History Deleted: ${req.params.id}` });
+    })
+    .catch((error) => {
+      res
+        .status(500)
+        .json({ message: `Unable to Delete Price History : ${error}` });
     });
 });
 

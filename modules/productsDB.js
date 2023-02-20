@@ -10,17 +10,18 @@ const productSchema = new Schema({
   brand: String,
   // product name
   name: String,
-  // product size with unit, e.g. 500ml / 450g / 18lb
-  size: String,
+  // product size, e.g. 500 / 1.2
+  size: Number,
+  // product unit, e.g. ml / g / lb
+  unit: String,
   // product picture url
   image: String,
   // product price history, keep different prices in array
   history: [
     {
       store: String, // store name
-      was_price: Number, // original price
       price: Number, // sale price
-      valid_to: Date, // price valid date
+      valid_to: Date, // sale ends date
     },
   ],
 });
@@ -76,8 +77,21 @@ module.exports = class ProductsDB {
   }
 
   updateProductById(data, id) {
-    // return this.Product.updateOne({ _id: id }, { $set: data }).exec();
-    return this.Product.updateOne({ _id: id }, { $push: { history: [data] } });
+    return this.Product.updateOne({ _id: id }, { $set: data }).exec();
+  }
+
+  addNewHistoryById(data, id) {
+    return this.Product.updateOne(
+      { _id: id },
+      { $push: { history: data } }
+    ).exec();
+  }
+
+  deleteHistoryById(data, id) {
+    return this.Product.updateOne(
+      { _id: id },
+      { $pull: { history: data } }
+    ).exec();
   }
 
   deleteProductById(id) {
