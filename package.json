@@ -9,12 +9,12 @@
   "author": "winghocheung",
   "license": "ISC",
   "dependencies": {
+    "cloudinary": "^1.34.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongoose": "^6.9.0"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/winghocheung/verbose-journey.git"
