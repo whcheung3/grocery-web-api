@@ -2,19 +2,12 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv").config();
-const cloudinary = require("cloudinary").v2;
 const ProductsDB = require("./modules/productsDB");
 const db = new ProductsDB();
 const HTTP_PORT = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(express.json());
-cloudinary.config({
-  cloud_name: "whcheung3",
-  api_key: "545359852674877",
-  api_secret: "uvANTAWDl7UGkGqQoAhUqTDGGOg",
-  secure: true,
-});
 
 // Confirm server is on
 app.get("/", function (req, res) {
@@ -60,33 +53,6 @@ app.get("/api/products/:id", function (req, res) {
 // Add new product
 // Expect a JSON object in body, e.g. { "upc": 012345678901, "category": [ "bread" ], "brand": "Wonder" }
 app.post("/api/products", function (req, res) {
-  // if upload product picture from submitted form
-  if (req.file) {
-    let streamUpload = (req) => {
-      return new Promise((resolve, reject) => {
-        let stream = cloudinary.uploader.upload_stream((error, result) => {
-          if (result) {
-            resolve(result);
-          } else {
-            reject(error);
-          }
-        });
-
-        streamifier.createReadStream(req.file.buffer).pipe(stream);
-      });
-    };
-
-    async function upload(req) {
-      let result = await streamUpload(req);
-      console.log(result);
-      return result;
-    }
-
-    upload(req).then((uploaded) => {
-      req.body.image = uploaded.url;
-    });
-  }
-
   db.addNewProduct(req.body)
     .then((data) => {
       res.status(201).json(data);
