@@ -91,9 +91,9 @@ app.put("/api/products/:id/add", function (req, res) {
 });
 
 // Delete price history of product
-// Expect a JSON object in body, e.g. { store: "No Frills", price: 9.99, valid_to: "2023-02-04" }
-app.put("/api/products/:id/delete", function (req, res) {
-  db.deleteHistoryById(req.body, req.params.id)
+// Expect a history objectID in URL, e.g. /63f41f2fe67f7c330b2b0832
+app.put("/api/products/:id/delete/:historyId", function (req, res) {
+  db.deleteHistoryByHistoryId(req.params.historyId, req.params.id)
     .then(() => {
       res
         .status(200)

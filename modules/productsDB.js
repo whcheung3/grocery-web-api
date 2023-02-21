@@ -87,10 +87,10 @@ module.exports = class ProductsDB {
     ).exec();
   }
 
-  deleteHistoryById(data, id) {
+  deleteHistoryByHistoryId(historyId, id) {
     return this.Product.updateOne(
       { _id: id },
-      { $pull: { history: data } }
+      { $pull: { history: { _id: historyId } } }
     ).exec();
   }
 
