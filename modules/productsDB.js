@@ -56,10 +56,17 @@ module.exports = class ProductsDB {
     return newProduct;
   }
 
-  getAllProducts(page, perPage, name) {
+  getAllProducts(page, perPage, q) {
+    let regex = new RegExp(q, "i");
+
     if (+page && +perPage) {
       return this.Product.find({
-        name: { $regex: new RegExp(name, "i") },
+        $or: [
+          { name: regex },
+          { category: regex },
+          { brand: regex },
+          { upc: q }, // UPC must be exactly matched
+        ],
       })
         .sort({ "history.valid_to": -1 })
         .skip((page - 1) * +perPage)
@@ -77,20 +84,26 @@ module.exports = class ProductsDB {
   }
 
   updateProductById(data, id) {
-    return this.Product.updateOne({ _id: id }, { $set: data }).exec();
+    return this.Product.findByIdAndUpdate(
+      id,
+      { $set: data },
+      { new: true }
+    ).exec();
   }
 
   addNewHistoryById(data, id) {
-    return this.Product.updateOne(
-      { _id: id },
-      { $push: { history: data } }
+    return this.Product.findByIdAndUpdate(
+      id,
+      { $addToSet: { history: data } },
+      { new: true }
     ).exec();
   }
 
   deleteHistoryByHistoryId(historyId, id) {
-    return this.Product.updateOne(
-      { _id: id },
-      { $pull: { history: { _id: historyId } } }
+    return this.Product.findByIdAndUpdate(
+      id,
+      { $pull: { history: { _id: historyId } } },
+      { new: true }
     ).exec();
   }
 

@@ -92,11 +92,11 @@ app.put("/api/products/:id/add", function (req, res) {
 
 // Delete price history of product
 // Expect a history objectID in URL, e.g. /63f41f2fe67f7c330b2b0832
-app.put("/api/products/:id/delete/:historyId", function (req, res) {
+app.delete("/api/products/:id/delete/:historyId", function (req, res) {
   db.deleteHistoryByHistoryId(req.params.historyId, req.params.id)
     .then(() => {
       res
-        .status(200)
+        .status(204)
         .json({ message: `Price History Deleted: ${req.params.id}` });
     })
     .catch((error) => {
