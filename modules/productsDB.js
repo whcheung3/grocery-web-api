@@ -68,7 +68,7 @@ module.exports = class ProductsDB {
           { upc: q }, // UPC must be exactly matched
         ],
       })
-        .sort({ "history.valid_to": -1 })
+        .sort({ "history.valid_to": -1, _id: -1 })
         .skip((page - 1) * +perPage)
         .limit(+perPage)
         .exec();
