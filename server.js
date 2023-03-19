@@ -6,7 +6,11 @@ const ProductsDB = require("./modules/productsDB");
 const db = new ProductsDB();
 const HTTP_PORT = process.env.PORT || 8080;
 
-app.use(cors({ origin: "*" }));
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 
 // Confirm server is on
