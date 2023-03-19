@@ -5,8 +5,12 @@ const dotenv = require("dotenv").config();
 const ProductsDB = require("./modules/productsDB");
 const db = new ProductsDB();
 const HTTP_PORT = process.env.PORT || 8080;
+const corsOptions = {
+  origin: "https://grocery-price-tracker.vercel.app",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Confirm server is on
