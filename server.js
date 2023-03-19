@@ -9,8 +9,10 @@ const HTTP_PORT = process.env.PORT || 8080;
 app.use(
   cors({
     origin: "*",
+    maxAge: 30,
   })
 );
+
 app.use(express.json());
 
 // Confirm server is on
