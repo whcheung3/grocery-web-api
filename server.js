@@ -1,10 +1,20 @@
 const express = require("express");
 const app = express();
+const router = express.Router();
 const cors = require("cors");
 const dotenv = require("dotenv").config();
 const ProductsDB = require("./modules/productsDB");
 const db = new ProductsDB();
 const HTTP_PORT = process.env.PORT || 8080;
+const setCache = function (req, res, next) {
+  const period = 60 * 5;
+  if (req.method == "GET") {
+    res.set("Cache-control", `public, max-age=${period}`);
+  } else {
+    res.set("Cache-control", "no-store");
+  }
+  next();
+};
 
 app.use(
   cors({
@@ -12,16 +22,17 @@ app.use(
     maxAge: 30,
   })
 );
-
 app.use(express.json());
+app.use(setCache);
+app.use("/api/v1", router);
 
 // Confirm server is on
-app.get("/", function (req, res) {
-  res.json({ message: "API Listening" });
+router.get("/", function (req, res) {
+  res.status(200).json({ message: "API Listening" });
 });
 
 // Get all products
-app.get("/api/products", function (req, res) {
+router.get("/products", function (req, res) {
   let queryPromise = null;
 
   if (req.query.q) {
@@ -37,7 +48,7 @@ app.get("/api/products", function (req, res) {
   queryPromise
     .then((data) => {
       if (data) res.status(200).json(data);
-      else res.json({ message: "No Products" });
+      else res.status(404).json({ message: "No Products" });
     })
     .catch((error) => {
       res.status(500).json({ message: `Unable to Get All Products: ${error}` });
@@ -45,11 +56,11 @@ app.get("/api/products", function (req, res) {
 });
 
 // Get one product
-app.get("/api/products/:id", function (req, res) {
+router.get("/products/:id", function (req, res) {
   db.getProductById(req.params.id)
     .then((data) => {
       if (data) res.status(200).json(data);
-      else res.json({ message: "Product Not Found" });
+      else res.status(404).json({ message: "Product Not Found" });
     })
     .catch((error) => {
       res.status(500).json({ message: `Unable to Get Product: ${error}` });
@@ -58,7 +69,7 @@ app.get("/api/products/:id", function (req, res) {
 
 // Add new product
 // Expect a JSON object in body, e.g. { "upc": 012345678901, "category": [ "bread" ], "brand": "Wonder" }
-app.post("/api/products", function (req, res) {
+router.post("/products", function (req, res) {
   db.addNewProduct(req.body)
     .then((data) => {
       res.status(201).json(data);
@@ -70,7 +81,7 @@ app.post("/api/products", function (req, res) {
 
 // Update product
 // Expect a JSON object in body, e.g. { "brand": "Wonder", "name": "White Bread" }
-app.put("/api/products/:id", function (req, res) {
+router.put("/products/:id", function (req, res) {
   db.updateProductById(req.body, req.params.id)
     .then(() => {
       res.status(200).json({ message: `Product Updated: ${req.params.id}` });
@@ -82,7 +93,7 @@ app.put("/api/products/:id", function (req, res) {
 
 // Add new price history of product
 // Expect a JSON object in body, e.g. { store: "No Frills", price: 9.99, valid_to: "2023-02-04" }
-app.put("/api/products/:id/add", function (req, res) {
+router.put("/products/:id/add", function (req, res) {
   db.addNewHistoryById(req.body, req.params.id)
     .then(() => {
       res
@@ -98,7 +109,7 @@ app.put("/api/products/:id/add", function (req, res) {
 
 // Delete price history of product
 // Expect a history objectID in URL, e.g. /63f41f2fe67f7c330b2b0832
-app.delete("/api/products/:id/delete/:historyId", function (req, res) {
+router.delete("/products/:id/delete/:historyId", function (req, res) {
   db.deleteHistoryByHistoryId(req.params.historyId, req.params.id)
     .then(() => {
       res
@@ -113,7 +124,7 @@ app.delete("/api/products/:id/delete/:historyId", function (req, res) {
 });
 
 // Delete product
-app.delete("/api/products/:id", function (req, res) {
+router.delete("/products/:id", function (req, res) {
   db.deleteProductById(req.params.id)
     .then(() => {
       res.status(204).json({ message: `Product Deleted: ${req.params.id}` });
