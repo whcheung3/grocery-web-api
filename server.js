@@ -6,24 +6,9 @@ const dotenv = require("dotenv").config();
 const ProductsDB = require("./modules/productsDB");
 const db = new ProductsDB();
 const HTTP_PORT = process.env.PORT || 8080;
-const setCache = function (req, res, next) {
-  const period = 60 * 5;
-  if (req.method == "GET") {
-    res.set("Cache-control", `public, max-age=${period}`);
-  } else {
-    res.set("Cache-control", "no-store");
-  }
-  next();
-};
 
-app.use(
-  cors({
-    origin: "*",
-    maxAge: 30,
-  })
-);
+app.use(cors());
 app.use(express.json());
-app.use(setCache);
 app.use("/api/v1", router);
 
 // Confirm server is on
