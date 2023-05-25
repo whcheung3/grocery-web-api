@@ -6,10 +6,13 @@ const dotenv = require("dotenv").config();
 const ProductsDB = require("./modules/productsDB");
 const db = new ProductsDB();
 const HTTP_PORT = process.env.PORT || 8080;
+const bodyParser = require("body-parser");
 
 app.use(cors());
 app.use(express.json());
 app.use("/api/v1", router);
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Confirm server is on
 router.get("/", function (req, res) {
